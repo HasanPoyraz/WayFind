@@ -5,6 +5,7 @@
 
 void visualize(char map[6][6]);
 char findDistance(char map[6][6]);
+void mapRoute(char map[6][6]);
 
 int main() {
     char map[6][6] = {
@@ -16,11 +17,58 @@ int main() {
         {'0', '0', '#', '#', '#', 'Y'}
     }; 
 
-    //visualize(map);
-    findDistance(map);
+    
+    map[6][6] = findDistance(map);
+    mapRoute(map);
 
     return 0;
 }
+
+void mapRoute(char map[6][6]) {
+    char nums[9] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
+    int n = 8;
+    int yy = 0, yx = 0;
+    int cy = 0, cx = 0;
+
+    for (yy = 0; yy < 6; yy++) {
+        for (yx = 0; yx < 6; yx++) {
+            if (map[yy][yx] == 'Y') {
+                goto exitLoops1;
+            }
+        }
+    }
+
+    exitLoops1:
+
+    cy = yy;
+    cx = yx;
+
+    // loop start
+    
+    while (true) {
+        if (cy > 0 && map[cy-1][cx] == nums[n]) map[cy-1][cx] = 'p', cy--, n--;
+        else if (cy < 5 && map[cy+1][cx] == nums[n]) map[cy+1][cx] = 'p', cy++, n--;
+        else if (cx < 5 && map[cy][cx+1] == nums[n]) map[cy][cx+1] = 'p', cx++, n--;
+        else if (cx > 0 && map[cy][cx-1] == nums[n]) map[cy][cx-1] = 'p', cx--, n--;
+
+        else if (cy > 0 && map[cy-1][cx] == 'X') break;
+        else if (cy < 5 && map[cy+1][cx] == 'X') break;
+        else if (cx < 5 && map[cy][cx+1] == 'X') break;
+        else if (cx > 0 && map[cy][cx-1] == 'X') break;
+
+        else {
+            n--;
+        }
+
+        if (n == -1) n = 8;
+    }
+    
+
+    // loop end
+
+    visualize(map);
+
+}       
 
 void visualize(char map[6][6]) {
     printf("'X': Starting position.\n");
@@ -91,7 +139,6 @@ char findDistance(char map[6][6]) {
             }
         }
     }
-    visualize(map);
     
     return map;
 } 
